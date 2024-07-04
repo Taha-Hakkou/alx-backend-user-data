@@ -36,7 +36,7 @@ def filter_datum(fields: List[str], redaction: str,
     return separator.join(items)
 
 
-PII_FIELDS = ['name', 'email', 'phone', 'ssn', 'password']
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 def get_logger() -> logging.Logger:
@@ -46,7 +46,7 @@ def get_logger() -> logging.Logger:
     logger.propagate = False
     sh = logging.StreamHandler()
     sh.setLevel(logging.INFO)
-    sh.setFormatter(RedactingFormatter(PII_FIELDS))
+    sh.setFormatter(RedactingFormatter(list(PII_FIELDS)))
     logger.addHandler(sh)
     return logger
 
