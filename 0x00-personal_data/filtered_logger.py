@@ -8,22 +8,22 @@ import mysql.connector
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
+    """ Redacting Formatter class """
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
     FIELDS = []
 
-    def __init__(self, fields: List[str]):
+    def __init__(self, fields: List[str]) -> None:
         """ RedactingFormatter constructor """
         self.FIELDS = fields
         super(RedactingFormatter, self).__init__(self.FORMAT)
 
     def format(self, record: logging.LogRecord) -> str:
         """ filters values in incoming log records using filter_datum """
-        return filter_datum(self.FIELDS, self.REDACTION, super().format(record), self.SEPARATOR)
+        return filter_datum(self.FIELDS, self.REDACTION,
+                            super().format(record), self.SEPARATOR)
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -31,15 +31,16 @@ def filter_datum(fields: List[str], redaction: str,
     """ returns the log message obfuscated """
     items = message.split(separator)
     for i, item in enumerate(items):
-        for field in fields: 
+        for field in fields:
             items[i] = re.sub(fr'{field}=.*', f'{field}={redaction}', items[i])
     return separator.join(items)
 
 
 PII_FIELDS = ['name', 'email', 'phone', 'ssn', 'password']
 
+
 def get_logger() -> logging.Logger:
-    """  """
+    """ returns a logger with specific properties """
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
     sh = logging.StreamHandler()
@@ -80,7 +81,8 @@ def main() -> None:
         row = list(row)
         row[6] = row[6].strftime("%Y-%m-%d %H:%M:%S")
         row = [f'{fields[i]}={row[i]}' for i in range(len(fields))]
-        log_record = logging.LogRecord("user_data", logging.INFO, None, None, '; '.join(row), None, None)
+        log_record = logging.LogRecord("user_data", logging.INFO, None,
+                                       None, '; '.join(row), None, None)
         print(formatter.format(log_record))
     cursor.close()
     db.close()
