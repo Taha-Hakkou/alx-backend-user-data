@@ -43,6 +43,7 @@ def get_logger() -> logging.Logger:
     """ returns a logger with specific properties """
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
+    logger.propagate = False
     sh = logging.StreamHandler()
     sh.setFormatter(RedactingFormatter)
     logger.addHandler(sh)
