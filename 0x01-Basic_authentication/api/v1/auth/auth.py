@@ -8,7 +8,8 @@ class Auth:
     """ Auth class """
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """ returns True if the path is not in the list of strings excluded_paths """
+        """ returns True if the path is not
+        in the list of strings excluded_paths """
         if path and excluded_paths and len(excluded_paths) > 0:
             if path[-1] != '/':
                 path += '/'
