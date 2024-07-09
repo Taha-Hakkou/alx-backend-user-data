@@ -47,10 +47,13 @@ class BasicAuth(Auth):
         """ returns the User instance based on his email and password """
         if user_email and isinstance(user_email, str) and \
                 user_pwd and isinstance(user_pwd, str):
-            users = User.search({'email': user_email})
-            for user in users:
-                if user.is_valid_password(user_pwd):
-                    return user
+            try:
+                users = User.search({'email': user_email})
+                for user in users:
+                    if user.is_valid_password(user_pwd):
+                        return user
+            except Exception:
+                pass
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
