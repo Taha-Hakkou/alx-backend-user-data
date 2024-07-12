@@ -23,10 +23,10 @@ class SessionDBAuth(SessionExpAuth):
         if session_id:
             try:
                 user_session = UserSession.search({'session_id': session_id})
-                if len(user_session) == 0:
+                if len(user_session) > 0:
                     return user_session[0].user_id
-            except Exception:
-                pass
+                except Exception:
+                    pass
         return None
 
     def destroy_session(self, request=None):
