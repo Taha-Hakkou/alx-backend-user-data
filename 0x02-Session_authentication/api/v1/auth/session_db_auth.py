@@ -10,17 +10,20 @@ class SessionDBAuth(SessionExpAuth):
 
     def create_session(self, user_id=None):
         """ (overloaded) creates and stores a new UserSession instance """
-        session_id = str(uuid.uuid4())
-        user_session = UserSession(user_id=user_id, session_id=session_id)
-        user_session.save()
-        return session_id
+        if user_id:
+            session_id = str(uuid.uuid4())
+            user_session = UserSession(user_id=user_id, session_id=session_id)
+            user_session.save()
+            return session_id
+        return None
 
     def user_id_for_session_id(self, session_id=None):
         """ (overloaded) returns the User ID
         by requesting based on session_id """
-        user_session = UserSession.search({'session_id': session_id})
-        if user_session:
-            return user_session[0].user_id
+        if session_id:
+            user_session = UserSession.search({'session_id': session_id})
+            if user_session:
+                return user_session[0].user_id
         return None
 
     def destroy_session(self, request=None):

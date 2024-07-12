@@ -33,7 +33,8 @@ def create_session():
     return user
 
 
-@app_views.route('/auth_session/logout', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_session():
     """ DELETE /api/v1/auth_session/logout
     Return:
