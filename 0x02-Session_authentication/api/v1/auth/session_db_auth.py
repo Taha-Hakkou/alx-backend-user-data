@@ -21,9 +21,12 @@ class SessionDBAuth(SessionExpAuth):
         """ (overloaded) returns the User ID
         by requesting based on session_id """
         if session_id:
-            user_session = UserSession.search({'session_id': session_id})
-            if user_session != []:
-                return user_session[0].user_id
+            try:
+                user_session = UserSession.search({'session_id': session_id})
+                if len(user_session) == 0:
+                    return user_session[0].user_id
+            except Exception:
+                pass
         return None
 
     def destroy_session(self, request=None):
