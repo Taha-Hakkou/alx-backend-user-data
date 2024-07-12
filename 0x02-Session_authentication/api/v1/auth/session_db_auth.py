@@ -3,6 +3,7 @@
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
 import uuid
+from datetime import datetim, timedelta
 
 
 class SessionDBAuth(SessionExpAuth):
@@ -11,7 +12,7 @@ class SessionDBAuth(SessionExpAuth):
     def create_session(self, user_id=None):
         """ (overloaded) creates and stores a new UserSession instance """
         if user_id:
-            session_id = str(uuid.uuid4())
+            session_id = super().create_session(user_id)
             user_session = UserSession(user_id=user_id, session_id=session_id)
             user_session.save()
             return session_id
@@ -24,7 +25,10 @@ class SessionDBAuth(SessionExpAuth):
             try:
                 user_session = UserSession.search({'session_id': session_id})
                 if len(user_session) > 0:
-                    return user_session[0].user_id
+                    created_at = user_session[0].created_at
+                    duration = timedelta(seconds=self.session_duration)
+                    if created_at + duration >= datetime.now():
+                        return user_session[0].user_id
             except Exception:
                 pass
         return None
