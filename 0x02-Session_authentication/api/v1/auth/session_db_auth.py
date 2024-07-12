@@ -22,7 +22,7 @@ class SessionDBAuth(SessionExpAuth):
         by requesting based on session_id """
         if session_id:
             user_session = UserSession.search({'session_id': session_id})
-            if user_session:
+            if user_session != []:
                 return user_session[0].user_id
         return None
 
