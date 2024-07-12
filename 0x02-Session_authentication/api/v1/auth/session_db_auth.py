@@ -40,8 +40,11 @@ class SessionDBAuth(SessionExpAuth):
         if request:
             session_id = request.cookies.get(getenv('SESSION_NAME'))
             if session_id:
-                user_session = UserSession.search({'session_id': session_id})
-                if user_session:
-                    user_session[0].remove()
-                    return True
+                try:
+                    user_session = UserSession.search({'session_id': session_id})
+                    if len(user_session) > 0:
+                        user_session[0].remove()
+                        return True
+                except Exception:
+                    pass
         return False
