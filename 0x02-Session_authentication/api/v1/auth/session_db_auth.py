@@ -37,14 +37,13 @@ class SessionDBAuth(SessionExpAuth):
 
     def destroy_session(self, request=None):
         """ (overloaded) destroys the UserSession instance """
-        if request:
-            session_id = request.cookies.get(getenv('SESSION_NAME'))
-            if session_id:
-                try:
-                    user_session = UserSession.search({'session_id': session_id})
-                    if len(user_session) > 0:
-                        user_session[0].remove()
-                        return True
-                except Exception:
-                    pass
+        session_id = self.session_cookie(request)
+        if session_id:
+            try:
+                user_session = UserSession.search({'session_id': session_id})
+                if len(user_session) > 0:
+                    user_session[0].remove()
+                    return True
+            except Exception:
+                pass
         return False
