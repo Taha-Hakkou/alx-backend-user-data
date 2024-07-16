@@ -55,6 +55,6 @@ class DB:
                            User.__table__.columns))
         for k, v in kwargs.items():
             if k not in columns:
-                 raise ValueError
+                raise ValueError
             setattr(user, k, v)
         self._session.commit()
