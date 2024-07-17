@@ -8,6 +8,7 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
 
 from user import Base, User
+from typing import Union
 
 
 class DB:
@@ -39,7 +40,7 @@ class DB:
         self._session.commit()
         return self._session.query(User).filter_by(email=user.email).first()
 
-    def find_user_by(self, **kwargs) -> User:
+    def find_user_by(self, **kwargs: Union[int, str]) -> User:
         """Returns the first row found in the users table as filtered
         """
         user = self._session.query(User).filter_by(**kwargs).first()
@@ -47,7 +48,7 @@ class DB:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: int, **kwargs) -> None:
+    def update_user(self, user_id: int, **kwargs: Union[int, str]) -> None:
         """Updates user's attributes based on kwargs
         """
         user = self.find_user_by(id=user_id)
