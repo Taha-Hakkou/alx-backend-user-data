@@ -9,14 +9,14 @@ AUTH = Auth()
 
 
 @app.route("/", methods=['GET'], strict_slashes=False)
-def index():
+def index() -> str:
     """Index route that returns a JSON payload
     """
-    return jsonify({"message": "Bienvenue"}), 200
+    return jsonify({"message": "Bienvenue"})
 
 
 @app.route('/users', methods=['POST'], strict_slashes=False)
-def users():
+def users() -> str:
     """Creates a new user
     """
     email = request.form.get('email')
