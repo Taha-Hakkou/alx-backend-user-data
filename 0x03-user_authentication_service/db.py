@@ -8,7 +8,6 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
 
 from user import Base, User
-from typing import Union
 
 
 class DB:
@@ -35,31 +34,29 @@ class DB:
     def add_user(self, email: str, hashed_password: str) -> User:
         """Saves the user to the database
         """
-        try:
-            user = User(email=email, hashed_password=hashed_password)
-            self._session.add(user)
-            self._session.commit()
-        except Exception:
-            self._session.rollback()
-            user = None
+        user = User(email=email, hashed_password=hashed_password)
+        self._session.add(user)
+        self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Union[int, str]) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """Returns the first row found in the users table as filtered
         """
-        user = self._session.query(User).filter_by(**kwargs).first()
+        for k, v in kwargs.items():
+            if not hasattr(User, k):
+                del kwargs[k]
+        query = self._session.query(User)
+        user = query.filter_by(**kwargs).first()
         if user is None:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: int, **kwargs: Union[int, str]) -> None:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """Updates user's attributes based on kwargs
         """
         user = self.find_user_by(id=user_id)
-        columns = list(map(lambda x: str(x).split('.')[1],
-                           User.__table__.columns))
         for k, v in kwargs.items():
-            if k not in columns:
+            if not hasattr(User, k):
                 raise ValueError
             setattr(user, k, v)
         self._session.commit()
