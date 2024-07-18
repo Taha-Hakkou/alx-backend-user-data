@@ -38,7 +38,7 @@ class DB:
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
         self._session.commit()
-        return self._session.query(User).filter_by(email=user.email).first()
+        return user
 
     def find_user_by(self, **kwargs: Union[int, str]) -> User:
         """Returns the first row found in the users table as filtered
