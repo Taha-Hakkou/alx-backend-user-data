@@ -8,6 +8,9 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
 
 from user import Base, User
+import logging
+
+logging.disable(logging.WARNING)
 
 
 class DB:
