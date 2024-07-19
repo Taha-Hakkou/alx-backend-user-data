@@ -18,7 +18,8 @@ class Auth:
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
-        """"""
+        """Creates a new user if not already exists
+        """
         try:
             user = self._db.find_user_by(email=email)
             raise ValueError(f'User {user.email} already exists')
@@ -79,11 +80,12 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(reset_token=reset_token)
-            hashed_password = _hash_password(password)
-            self._db.update_user(user.id, hashed_password=hashed_password)
-            self._db.update_user(user.id, reset_token=None)
         except NoResultFound:
             raise ValueError
+        hashed_password = _hash_password(password)
+        self._db.update_user(user.id,
+                             hashed_password=hashed_password,
+                             reset_token=None)
 
 
 def _hash_password(password: str) -> bytes:
