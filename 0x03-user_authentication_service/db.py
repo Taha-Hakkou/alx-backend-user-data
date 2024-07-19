@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 
 from user import Base, User
 import logging
@@ -47,7 +48,7 @@ class DB:
         """
         for k, v in kwargs.items():
             if not hasattr(User, k):
-                del kwargs[k]
+                raise InvalidRequestError
         query = self._session.query(User)
         user = query.filter_by(**kwargs).first()
         if user is None:
